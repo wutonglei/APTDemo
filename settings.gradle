@@ -1,0 +1,4 @@
+include ':Compiler'
+include ':Annotation'
+include ':app'
+rootProject.name = "APTDemo"
