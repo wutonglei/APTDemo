@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.RadioButton;
+import android.widget.Toast;
 
 import com.example.aptdemo.radiobutton.BindRb;
 import com.example.aptdemo.radiobutton.MainActivity_RG_FastRb;
@@ -34,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
         MainActivity_RG_FastRb.mainActivityRGFastRb.set_rg_radioButton1Listener(new RadioButtonListener() {
             @Override
             public void selected(View v) {
-
+                Toast.makeText(MainActivity.this, "", Toast.LENGTH_SHORT).show();
             }
         });
     }
