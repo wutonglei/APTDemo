@@ -14,8 +14,8 @@ public class MainActivity_RG_FastRb {
     int rb1;
     int rb2;
     int rg;
-    RadioButtonListener radioButtonListener1;
-    RadioButtonListener radioButtonListener2;
+    RadioButtonListener radioButton1Listener;
+    RadioButtonListener radioButton2Listener;
     public static MainActivity_RG_FastRb mainActivityRGFastRb = new MainActivity_RG_FastRb();
 
     private MainActivity_RG_FastRb() {
@@ -26,15 +26,14 @@ public class MainActivity_RG_FastRb {
         radioButton1 = activity.findViewById(rb1);
         radioButton2 = activity.findViewById(rb2);
         radioGroup = activity.findViewById(rg);
-
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-                if (checkedId == rb1 && radioButtonListener1 != null) {
-                    radioButtonListener1.selected(radioButton1);
+                if (checkedId == rb1 && radioButton1Listener != null) {
+                    radioButton1Listener.selected(radioButton1);
                 }
-                if (checkedId == rb2 && radioButtonListener2 != null) {
-                    radioButtonListener1.selected(radioButton2);
+                if (checkedId == rb2 && radioButton2Listener != null) {
+                    radioButton2Listener.selected(radioButton2);
                 }
 
 
@@ -43,11 +42,11 @@ public class MainActivity_RG_FastRb {
     }
 
     public void set_rg_radioButton1Listener(RadioButtonListener radioButtonListener) {
-        radioButtonListener1 = radioButtonListener;
+        radioButton1Listener = radioButtonListener;
     }
 
     public void set_rg_radioButton2Listener(RadioButtonListener radioButtonListener) {
-        radioButtonListener2 = radioButtonListener;
+        radioButton2Listener = radioButtonListener;
     }
 
 

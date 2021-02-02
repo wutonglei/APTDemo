@@ -100,5 +100,7 @@ public class FactoryGroupedClasses {
 
         // Write file
         JavaFile.builder(packageName, typeSpec).build().writeTo(filer);
+
+
     }
 }

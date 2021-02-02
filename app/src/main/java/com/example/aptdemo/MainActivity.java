@@ -7,7 +7,7 @@ import android.view.View;
 import android.widget.RadioButton;
 import android.widget.Toast;
 
-import com.example.aptdemo.radiobutton.BindRb;
+import com.example.annotation.BindRb;
 import com.example.aptdemo.radiobutton.MainActivity_RG_FastRb;
 import com.example.aptdemo.radiobutton.RadioButtonListener;
 
@@ -21,6 +21,7 @@ import com.example.aptdemo.radiobutton.RadioButtonListener;
  *
  */
 public class MainActivity extends AppCompatActivity {
+
 
     @BindRb(groupId=R.id.rg,viewId = R.id.rb_1)
     RadioButton button1;

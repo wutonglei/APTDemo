@@ -61,7 +61,7 @@ public class FactoryProcessor extends AbstractProcessor {
     private Filer filer;
     private Elements elementUtils;
     private Map<String, FactoryGroupedClasses> factoryClasses = new LinkedHashMap<>();
-
+//
     /**
      * 这个方法用于初始化处理器，方法中有一个ProcessingEnvironment类型的参数，ProcessingEnvironment是一个注解处理工具的集合。它包含了众多工具类。例如：
      * Filer可以用来编写新文件；
@@ -79,7 +79,7 @@ public class FactoryProcessor extends AbstractProcessor {
     @Override
     public synchronized void init(ProcessingEnvironment processingEnvironment) {
         super.init(processingEnvironment);
-
+//
         typeUtils = processingEnvironment.getTypeUtils();
         messager = processingEnvironment.getMessager();
         filer = processingEnvironment.getFiler();
@@ -136,6 +136,7 @@ public class FactoryProcessor extends AbstractProcessor {
 //        返回值，是一个boolean类型，返回值表示注解是否由当前Processor 处理。
 //        如果返回 true，则这些注解由此注解来处理，后续其它的 Processor 无需再处理它们；
 //        如果返回 false，则这些注解未在此Processor中处理并，那么后续 Processor 可以继续处理它们。
+        System.out.println("dasdsadsada");
         try {
             // Scan classes
             for (Element annotatedElement : roundEnvironment.getElementsAnnotatedWith(Factory.class)) {
@@ -181,7 +182,7 @@ public class FactoryProcessor extends AbstractProcessor {
             e.printStackTrace();
         }
 
-        return true;
+        return false;
     }
 
     private void checkValidClass(FactoryAnnotatedClass item) throws ProcessingException {
