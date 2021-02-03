@@ -24,8 +24,8 @@ public class MainActivity extends AppCompatActivity {
 
 
     @BindRb(groupId=R.id.rg,viewId = R.id.rb_1)
-    RadioButton button1;
-    @BindRb(groupId=R.id.rg,viewId = R.id.rb_1)
+   public RadioButton button1;
+    @BindRb(groupId=R.id.rg,viewId = R.id.rb_2)
     RadioButton button2;
     @Override
     protected void onCreate(Bundle savedInstanceState) {

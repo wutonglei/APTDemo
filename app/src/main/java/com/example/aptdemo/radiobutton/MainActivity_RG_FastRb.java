@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
+import com.example.aptdemo.MainActivity;
+
 /**
  * 最佳的方式还是扩展
  */
@@ -22,8 +24,8 @@ public class MainActivity_RG_FastRb {
 
     }
 
-    public void bind(Activity activity) {
-        radioButton1 = activity.findViewById(rb1);
+    public void bind(MainActivity activity) {
+        activity.button1 = activity.findViewById(rb1);
         radioButton2 = activity.findViewById(rb2);
         radioGroup = activity.findViewById(rg);
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
