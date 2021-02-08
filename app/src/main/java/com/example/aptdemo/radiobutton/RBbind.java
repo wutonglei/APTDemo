@@ -27,14 +27,11 @@ public class RBbind {
     int groupID;
 
     public RBbind(Activity activity) {
-
         Log.i(TAG, "RBbind: " + activity.getClass().toString());
         String packName = activity.getClass().getPackage().getName();
         String activityName = activity.getClass().getSimpleName();
         Field[] fields = activity.getClass().getFields();
-
         for (Field field : fields) {
-
             if (!field.getType().toString().contains("android.widget.RadioButton"))
                 continue;
             Log.i(TAG, "RBbind: field" + field.toString() + field.getType());
@@ -54,8 +51,7 @@ public class RBbind {
             }
 
         }
-
-
+        // FIXME: 2021/2/8  这里偷懒了 应该用不同的groupID 分别绑定的 
         String generateFileName = packName + "." + activityName + "RG" + groupID + "FastRb";
         Log.i(TAG, "RBbind: " + generateFileName);
         try {
@@ -78,15 +74,6 @@ public class RBbind {
         } catch (InvocationTargetException e) {
             e.printStackTrace();
         }
-
-        /**
-         * MainActivityRG2131230923FastRb
-         * 1.获取全部属性
-         * 2.属性上有特定声明的
-         * 3.分类
-         * 4.绑定
-         * */
-
     }
 
     public static View findViewById(Activity a, int id) {

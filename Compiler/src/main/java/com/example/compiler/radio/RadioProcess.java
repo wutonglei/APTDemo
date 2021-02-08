@@ -180,10 +180,10 @@ public class RadioProcess extends AbstractProcessor {
         System.out.println("----------" + enclosingElement.getClass());
         TypeElement superClassName = (TypeElement) enclosingElement;
         PackageElement packageElement = elementUtils.getPackageOf(superClassName);
-        String pk2= superClassName.getQualifiedName().toString();
+        String pk2 = superClassName.getQualifiedName().toString();
         String pkName = packageElement.getQualifiedName().toString();
-        System.out.println("pk2:"+pk2);
-        System.out.println("pkName:"+pkName);
+        System.out.println("pk2:" + pk2);
+        System.out.println("pkName:" + pkName);
         String activityName = enclosingElement.getSimpleName().toString();
 
 //生成监听接口
@@ -258,8 +258,8 @@ public class RadioProcess extends AbstractProcessor {
             String btnListenerName = name + "Listener";
 //            我觉的是通过反射获取Class
 //@IdRes
-            ClassName RBbindClass=ClassName.bestGuess("com.example.aptdemo.radiobutton.RBbind");
-            bindBuilder.addCode(" activity.$L = (RadioButton) $L.findViewById(activity,$L);", variableElement.getSimpleName().toString(), RBbindClass,annotation.viewId())
+            ClassName RBbindClass = ClassName.bestGuess("com.example.aptdemo.radiobutton.RBbind");
+            bindBuilder.addCode(" activity.$L = (RadioButton) $L.findViewById(activity,$L);", variableElement.getSimpleName().toString(), RBbindClass, annotation.viewId())
 
             ;
 
