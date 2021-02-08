@@ -28,7 +28,7 @@ public class MainActivity_RG_FastRb {
         activity.button1 = activity.findViewById(rb1);
         radioButton2 = activity.findViewById(rb2);
         radioGroup = activity.findViewById(rg);
-        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+        ( (RadioGroup)  activity.findViewById(rg)).setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 if (checkedId == rb1 && radioButton1Listener != null) {
@@ -37,8 +37,6 @@ public class MainActivity_RG_FastRb {
                 if (checkedId == rb2 && radioButton2Listener != null) {
                     radioButton2Listener.selected(radioButton2);
                 }
-
-
             }
         });
     }

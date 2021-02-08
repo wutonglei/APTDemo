@@ -40,6 +40,9 @@ import javax.lang.model.util.Elements;
 
 /**
  * 1.生成RadioButtonListener
+ * <p>
+ * javapoet
+ * $S 替换成 带引号的   "2131231"
  */
 @AutoService(Processor.class)
 public class RadioProcess extends AbstractProcessor {
@@ -72,6 +75,11 @@ public class RadioProcess extends AbstractProcessor {
         if (set.size() == 0)
             return true;
         //1、获取要处理的注解的元素的集合 获取所有BindRb.class：[button1, button2]
+//        getSupportedAnnotationTypes返回值为添加了BindRb.class
+        //获取所有BindRb.class：[button1, button2]
+        //set：[errorRaised=false, rootElements=[com.example.aptdemo.Circle, com.example.aptdemo.IShape, com.example.aptdemo.MainActivity, com.example.aptdemo.radiobutton.MainActivity_RG_FastRb, com.example.aptdemo.radiobutton.RadioButtonListener, com.example.aptdemo.Rectangle, com.example.aptdemo.TestFactory, com.example.aptdemo.BuildConfig], processingOver=false]
+        //roundEnvironment：[errorRaised=false, rootElements=[com.example.aptdemo.Circle, com.example.aptdemo.IShape, com.example.aptdemo.MainActivity, com.example.aptdemo.radiobutton.MainActivity_RG_FastRb, com.example.aptdemo.radiobutton.RadioButtonListener, com.example.aptdemo.Rectangle, com.example.aptdemo.TestFactory, com.example.aptdemo.BuildConfig], processingOver=false]
+        //[com.example.annotation.BindRb]
         Set<? extends Element> elements = roundEnvironment.getElementsAnnotatedWith(BindRb.class);
         System.out.println("获取所有BindRb.class：" + elements);
         System.out.println("set：" + roundEnvironment);
@@ -127,7 +135,7 @@ public class RadioProcess extends AbstractProcessor {
 //            generateCode(variableElement);
 
         }
-        System.out.println("----elementsMap的大小"+elementsMap.size());
+        System.out.println("----elementsMap的大小" + elementsMap.size());
         for (List<VariableElement> veList : elementsMap.values()) {
 
             try {
@@ -172,7 +180,10 @@ public class RadioProcess extends AbstractProcessor {
         System.out.println("----------" + enclosingElement.getClass());
         TypeElement superClassName = (TypeElement) enclosingElement;
         PackageElement packageElement = elementUtils.getPackageOf(superClassName);
+        String pk2= superClassName.getQualifiedName().toString();
         String pkName = packageElement.getQualifiedName().toString();
+        System.out.println("pk2:"+pk2);
+        System.out.println("pkName:"+pkName);
         String activityName = enclosingElement.getSimpleName().toString();
 
 //生成监听接口
@@ -199,26 +210,27 @@ public class RadioProcess extends AbstractProcessor {
         String activity = "android.app.Activity";
         String radioButton = "android.widget.RadioButton";
         String radioGroup = "android.widget.RadioGroup";
-
+        String pkRadioButtonListener = packageName + ".RadioButtonSelectedListener";
+        System.out.println("pkRadioButtonListener" + pkRadioButtonListener);
 //        Class activityClass=Class.forName(enclosingElement.getSimpleName().toString());
 
         String classNameStr = enclosingElement.getSimpleName().toString();
         System.out.println("-----" + classNameStr);
 //        惊了  完全 就是猜测有类？？？    这个类实际上不存在即自己定义的在生成的文件能用到
 //        这里用全类名不会报错 用简单的类名会报错后as自动导包
+//        ClassName parameterClassName = ClassName.bestGuess(classNameStr);
         ClassName parameterClassName = ClassName.bestGuess(classNameStr);
         ClassName radioButtonName = ClassName.bestGuess(radioButton);
         ClassName radioGroupName = ClassName.bestGuess(radioGroup);
+        ClassName RadioButtonListenerClassName = ClassName.bestGuess(pkRadioButtonListener);
 
 
 //        TypeName typeName=new TypeName(activity);
 //        fastRbBuilder.addField(typeName);
         MethodSpec.Builder bindBuilder = MethodSpec.methodBuilder("bind")
-
                 .addParameter(parameterClassName, "activity");
 
 
-        fastRbBuilder.addMethod(bindBuilder.build());
 //        一个文件里面也就一个radioGroup
         fastRbBuilder.addField(radioGroupName, "radioGroup");
 //        fastRbBuilder.addField();      int rg;
@@ -227,13 +239,17 @@ public class RadioProcess extends AbstractProcessor {
                 .build();
 
         fastRbBuilder.addField(rgFieldSpec);
+
+        // TODO: 2021/2/5 应该把 相关的单独拿出来 变成一个类
+
         for (VariableElement variableElement : elementList) {
-            System.out.println("variableElement:"+variableElement);
-            annotation=  variableElement.getAnnotation(BindRb.class);
+            String buttonName = variableElement.getSimpleName().toString();
+            System.out.println("variableElement:" + variableElement);
+            annotation = variableElement.getAnnotation(BindRb.class);
             int viewId = annotation.viewId();
             fastRbBuilder.addField(radioButtonName, variableElement.getSimpleName().toString());
 
-            FieldSpec rbFieldSpec = FieldSpec.builder(int.class, "rb" + variableElement.getSimpleName().toString()+"Id")
+            FieldSpec rbFieldSpec = FieldSpec.builder(int.class, "rb" + variableElement.getSimpleName().toString() + "Id")
                     .initializer("$L", annotation.viewId())
                     .build();
             fastRbBuilder.addField(rbFieldSpec);
@@ -241,7 +257,11 @@ public class RadioProcess extends AbstractProcessor {
             String name = variableElement.getSimpleName().toString();
             String btnListenerName = name + "Listener";
 //            我觉的是通过反射获取Class
+//@IdRes
+            ClassName RBbindClass=ClassName.bestGuess("com.example.aptdemo.radiobutton.RBbind");
+            bindBuilder.addCode(" activity.$L = (RadioButton) $L.findViewById(activity,$L);", variableElement.getSimpleName().toString(), RBbindClass,annotation.viewId())
 
+            ;
 
 //                Class clazz = Class.forName(packageName + "RadioButtonSelectedListener");
 //            MethodSpec rbListenerMP = MethodSpec.constructorBuilder()
@@ -253,8 +273,31 @@ public class RadioProcess extends AbstractProcessor {
 //            fastRbBuilder.addMethod(rbListenerMP);
 
 
+            FieldSpec radioButtonListenerSpec = FieldSpec.builder(RadioButtonListenerClassName, buttonName + "Listener")
+                    .build();
+
+            MethodSpec listenerSpec = MethodSpec.methodBuilder("setSelectRg" + buttonName + "Listener")
+                    .addParameter(RadioButtonListenerClassName, "radioButtonListener")
+                    .addCode("$LListener=radioButtonListener;", buttonName)
+                    .build();
+            fastRbBuilder.addField(radioButtonListenerSpec);
+            fastRbBuilder.addMethod(listenerSpec);
+
         }
 
+        bindBuilder.addCode("  ( (RadioGroup)  activity.findViewById($L)).setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {\n", annotation.groupId());
+        bindBuilder.addCode("@Override\n");
+        bindBuilder.addCode("  public void onCheckedChanged(RadioGroup group, int checkedId) {\n");
+        for (VariableElement variableElement : elementList) {
+
+        }
+
+
+        bindBuilder.addCode("    }\n" +
+                "        });\n");
+
+
+        fastRbBuilder.addMethod(bindBuilder.build());
 
 //        Attempt to recreate a file for type com.hannesdorfmann.annotationprocessing101.factory.MealFactory
 //         构建已存在的文件导致的
@@ -300,10 +343,11 @@ public class RadioProcess extends AbstractProcessor {
     public Set<String> getSupportedAnnotationTypes() {
 //
         Set<String> annotations = new LinkedHashSet<>();
-        annotations.add(BindRb.class.getCanonicalName());
+        annotations.add(Factory.class.getCanonicalName());
         System.out.println("执行j：" + j);
         System.out.println("getSupportedAnnotationTypes" + annotations);
         return annotations;
+//        return super.getSupportedAnnotationTypes();
     }
 
     @Override
@@ -320,7 +364,6 @@ public class RadioProcess extends AbstractProcessor {
 
 
         elementUtils = processingEnvironment.getElementUtils();
-
         filer = processingEnvironment.getFiler();
     }
 
